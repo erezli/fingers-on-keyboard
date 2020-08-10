@@ -10,9 +10,10 @@ class Fingers(ObjectFrame):
 
     def __init__(self, hsv_l, hsv_u):
         super().__init__(hsv_l, hsv_u)
-        self._roi_hists = []
+        self._roi_hists = np.zeros((180, 1))
         self.track_window = []
         self.position = []  # (x, y)
+        self.areas = []
         # self.finger_num = finger_num
 
     def update_property(self, frame):
@@ -38,6 +39,7 @@ class Fingers(ObjectFrame):
         w_list = []
         h_list = []
         track_win = []
+        contour_list = []
 
         for contour in contours:
             (x, y, w, h) = cv2.boundingRect(contour)
@@ -52,6 +54,7 @@ class Fingers(ObjectFrame):
             w_list.append(w)
             h_list.append(h)
             track_win.append((x, y, w, h))
+            contour_list.append(contour)
             # res2 = frame.copy()
             # cv2.drawContours(res2, contours, -1, (255, 255, 0), 3)
             # cv2.circle(res2, (int(x + w / 2), int(y + h / 2)), 20, (255, 34, 34), -1)
@@ -59,7 +62,8 @@ class Fingers(ObjectFrame):
             # cv2.putText(res2, 'No Finger Detected - hold on', (10, 20), cv2.FONT_HERSHEY_SIMPLEX, .5, (0, 0, 255), 1)
         self.finger_num = len(x_list)
         self.track_window = track_win
-        self.position = [(xx + ww / 2, yy + hh / 2) for xx in x_list for ww in w_list for yy in y_list for hh in h_list]
+        self.position = [(xx + ww / 2, yy + hh / 2) for xx, ww, yy, hh in zip(x_list, w_list, y_list, h_list)]
+        self.areas = contour_list
         # return res2
 
     def update_roi_hists(self, frame):

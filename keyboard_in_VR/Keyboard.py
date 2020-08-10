@@ -68,7 +68,7 @@ class Keyboard(ObjectFrame):
         result = cv2.warpPerspective(frame, matrix, (880, 260))
         return result
 
-    def keyboard_output(self, finger_positions):
+    def keyboard_output(self, finger_positions):    # rewrite this
         return_list = []
         if finger_positions is not None:
             '''
