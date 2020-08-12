@@ -92,6 +92,29 @@ class Fingers(ObjectFrame):
             self.track_window[i] = track_window
         return final_frame
 
+    def translucent_fingers(self, frame, first_frame, transparency=4):
+        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        l_b = np.array(self.hsv_l)
+        u_b = np.array(self.hsv_u)
+        mask = cv2.inRange(hsv, l_b, u_b)
+        res = cv2.bitwise_and(frame, frame, mask=mask)
+        if transparency == 4:
+            a = 0.7
+            b = 0.3
+        elif transparency == 3:
+            a = 0.6
+            b = 0.4
+        elif transparency == 2:
+            a = 0.5
+            b = 0.5
+        else:
+            a = 0.4
+            b = 0.6
+        # fgmask = cv2.cvtColor(fgmask, cv2.COLOR_GRAY2BGR)
+        hands = cv2.bitwise_and(frame, res)
+        translucent_fingers = cv2.addWeighted(first_frame, a, hands, b, 0)
+        return translucent_fingers
+
     @staticmethod
     def detect_hand_haar(frame):
         hand_detection = cv2.CascadeClassifier('../haarcascades/Hand.Cascade.1.xml')
