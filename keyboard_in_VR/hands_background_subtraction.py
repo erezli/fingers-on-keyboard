@@ -2,8 +2,8 @@ import cv2
 
 
 cap = cv2.VideoCapture(0)
-fgbg = cv2.bgsegm.createBackgroundSubtractorMOG()
-# fgbg = cv2.createBackgroundSubtractorMOG2(detectShadows=True)
+# fgbg = cv2.bgsegm.createBackgroundSubtractorMOG()
+fgbg = cv2.createBackgroundSubtractorMOG2(detectShadows=False)
 # fgbg = cv2.bgsegm.createBackgroundSubtractorGMG()
 # kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
 # fgbg = cv2.createBackgroundSubtractorKNN(detectShadows=False)
