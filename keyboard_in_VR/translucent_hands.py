@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-
+# the camera needs to be fixed
 # fgbg = cv2.createBackgroundSubtractorMOG2(history=, varThreshold=, detectShadows= )
 
 
@@ -21,8 +21,20 @@ def background_subtraction(frame, fgbg):
     return fgmask
 
 
-def add_translucent_hands(frame, fgmask, first_frame):
+def add_translucent_hands(frame, fgmask, first_frame, transparency=4):
+    if transparency == 4:
+        a = 0.7
+        b = 0.3
+    elif transparency == 3:
+        a = 0.6
+        b = 0.4
+    elif transparency == 2:
+        a = 0.5
+        b = 0.5
+    else:
+        a = 0.4
+        b = 0.6
     fgmask = cv2.cvtColor(fgmask, cv2.COLOR_GRAY2BGR)
     hands = cv2.bitwise_and(frame, fgmask)
-    res = cv2.addWeighted(first_frame, 0.7, hands, 0.3, 0)
+    res = cv2.addWeighted(first_frame, a, hands, b, 0)
     return res
