@@ -16,6 +16,7 @@ class Keyboard(ObjectFrame):
         self.approx = np.zeros((4, 2))
         self.vertices = [(0, 0), (0, 0), (0, 0), (0, 0)]
         self.output = []
+        self.contour = None
 
     def get_position_contour(self, frame):
         # mask out the background
@@ -50,6 +51,7 @@ class Keyboard(ObjectFrame):
                             # print(approx)
                             self.track_window = (x, y, w, h)
                             self.approx = approx
+                            self.contour = contour
                 elif 50000 > cv2.contourArea(contour) > 1500:
                     pass
                 else:
@@ -63,7 +65,7 @@ class Keyboard(ObjectFrame):
 
     def perspective_transformation(self, frame):
         pts1 = np.float32(self.vertices)
-        pts2 = np.float32([[0, 0], [880, 0], [0, 260], [880, 260]])
+        pts2 = np.float32([[0, 0], [0, 260], [880, 260], [880, 0]])
         matrix = cv2.getPerspectiveTransform(pts1, pts2)
         result = cv2.warpPerspective(frame, matrix, (880, 260))
         return result
