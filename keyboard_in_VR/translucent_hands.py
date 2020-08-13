@@ -34,7 +34,7 @@ def add_translucent_hands(frame, fgmask, first_frame, transparency=4):
     else:
         a = 0.4
         b = 0.6
-    fgmask = cv2.cvtColor(fgmask, cv2.COLOR_GRAY2BGR)
+    # fgmask = cv2.cvtColor(fgmask, cv2.COLOR_GRAY2BGR)
     hands = cv2.bitwise_and(frame, fgmask)
     res = cv2.addWeighted(first_frame, a, hands, b, 0)
     return res
