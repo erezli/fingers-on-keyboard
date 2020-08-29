@@ -31,34 +31,36 @@ class Keyboard(ObjectFrame):
         grey = cv2.cvtColor(dilation, cv2.COLOR_BGR2GRAY)
 
         contours, _ = cv2.findContours(grey, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
+        count = 0
         for contour in contours:
-            count = 0
+
             approx = cv2.approxPolyDP(contour, 0.01 * cv2.arcLength(contour, True), True)
             if len(approx) == 4:
                 if cv2.contourArea(contour) >= 15000:
                     count += 1
                     if count >= 2:
+                        cv2.putText(frame, 'seems like two keyboards are being detected...', (10, 20),
+                                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
                         pass
                     else:
                         x, y, w, h = cv2.boundingRect(approx)
                         if frame.shape[1] - 5 < x + w <= frame.shape[1] or 0 <= x < 5 or frame.shape[0] - 5 < y + h <= \
                                 frame.shape[0] or 0 <= y < 5:
+                            cv2.putText(frame, 'bring the keyboard to centre', (frame.shape[0], 20),
+                                        cv2.FONT_HERSHEY_SIMPLEX, .3, (0, 0, 255), 1)
                             pass
                         else:
+                            cv2.putText(frame, 'found keyboard', (10, 20),
+                                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 3)
                             # cv2.drawContours(frame, [approx], 0, (255, 76, 186), 5)
                             # print((x, y, w, h))
                             # print(approx)
                             self.track_window = (x, y, w, h)
                             self.approx = approx
                             self.contour = contour
-                elif 50000 > cv2.contourArea(contour) > 1500:
-                    pass
-                else:
-                    pass
             else:
-                continue
-        pass
+                cv2.putText(frame, 'no keyboard detected, try harder', (10, 50),
+                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1)
 
     def get_position_4_corners(self, frame):
         pass
