@@ -12,8 +12,9 @@ fingers = Fingers([88, 130, 200], [255, 255, 255])
 while cap.isOpened():
     _, frame = cap.read()
     keyboard.get_position_contour(frame)
-    cv2.imshow('frame', frame)
+    # cv2.imshow('frame', frame)
     if keyboard.track_window != [0, 0, 0, 0]:
+        print("found")
         break
 
 print(keyboard.approx)
