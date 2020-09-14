@@ -1,5 +1,6 @@
 import cv2
 from tests import hsv_ycbcr
+import numpy as np
 
 fgbg = cv2.bgsegm.createBackgroundSubtractorMOG()
 hsvB = [(0, 0, 160), (206, 28, 255)]
@@ -15,10 +16,11 @@ def movementFilter(frame):
 
 def colourFilter(frame):
     nohand, hsv, ycrcb = hsv_ycbcr.SkinDetect(frame, hsvB, ycrcbB)
+    nohand = cv2.erode(nohand, np.ones((3, 3), np.uint8), iterations=3)
     nohand = cv2.bitwise_and(frame, frame, mask=nohand)
     cv2.imshow("hsvOnly", hsv)
     cv2.imshow("ycrcbOnly", ycrcb)
-    cv2.imshow("hands", nohand)
+    cv2.imshow("nohands", nohand)
     return nohand, hsv, ycrcb
 
 
