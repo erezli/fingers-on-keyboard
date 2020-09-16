@@ -35,7 +35,7 @@ while cap.isOpened():
     if count == 1:
         added = bg
     else:
-        added = cv2.addWeighted(bg, 1/count, added, 1-(1/count), 0)
+        added = cv2.addWeighted(bg, 1/(count+1), added, 1-(1/(count+1)), 0)
 
     show = cv2.addWeighted(added, .5, frame, .5, 0)
     cv2.imshow("Frame", show)
