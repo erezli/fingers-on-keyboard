@@ -4,8 +4,7 @@ from tests import adaptive_contour
 
 
 def SkinDetect(img, hsvBoundary, YCrCbBoundary):
-    img = adaptive_contour.HandFiltering(img)
-    cv2.imshow('img', img)
+    imgTh, maskTh = adaptive_contour.HandFiltering(img)
     # converting from gbr to hsv color space
     img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     # skin color range for hsv color space
@@ -20,6 +19,8 @@ def SkinDetect(img, hsvBoundary, YCrCbBoundary):
 
     # merge skin detection (YCbCr and hsv)
     global_mask = cv2.bitwise_and(YCrCb_mask, hsv_mask)
+    maskTh = cv2.cvtColor(maskTh, cv2.COLOR_BGR2GRAY)
+    # global_mask = cv2.bitwise_or(global_mask, maskTh)
     global_mask = cv2.medianBlur(global_mask, 3)
     global_mask = cv2.morphologyEx(global_mask, cv2.MORPH_OPEN, np.ones((4, 4), np.uint8))
 

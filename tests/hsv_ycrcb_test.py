@@ -1,5 +1,7 @@
 import cv2
 from tests import hsv_ycbcr
+import numpy as np
+
 
 fgbg = cv2.bgsegm.createBackgroundSubtractorMOG()
 
@@ -90,9 +92,21 @@ while cap.isOpened():
     ycrcbB = [(yl, rl, bl), (yu, ru, bu)]
 
     handOnly, hsv, ycrcb = hsv_ycbcr.SkinDetect(frame1, hsvB, ycrcbB)
+    handOnly = cv2.erode(handOnly, np.ones((3, 3), np.uint8), iterations=3)
+    handOnly = cv2.bitwise_and(frame1, frame1, mask=handOnly)
+    frame1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)
+    thresh = cv2.adaptiveThreshold(frame1, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 899, -20)
+    # mask = np.zeros(handOnly.shape, dtype=handOnly.dtype)
+    # contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    # for c in contours:
+    #     if cv2.contourArea(c) > 1000:
+    #         cv2.drawContours(mask, [c], -1, (255, 255, 255), -1)
+    # mask = cv2.bitwise_not(mask)
+    # maskF = cv2.bitwise_or(handOnly, mask)
     cv2.imshow("hsvOnly", hsv)
     cv2.imshow("ycrcbOnly", ycrcb)
     cv2.imshow("hands", handOnly)
+    cv2.imshow("after thresh", thresh)
 
     if cv2.waitKey(1) == 27:
         break
